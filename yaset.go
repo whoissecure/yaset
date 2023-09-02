@@ -172,7 +172,7 @@ func allAPIsUsage(d string, cfg *ini.File) (enumerated_subdomains []string) {
 						}
 					}
 				} else if regexUse {
-					r := regexp.MustCompile(fmt.Sprintf(`(?i)(%%(25)*2F){0,1}[a-zA-Z0-9]+([\-\.]{1}[a-zA-Z0-9]+)*\.%s`, escapedDomain))
+					r := regexp.MustCompile(fmt.Sprintf(`(?i)(%%(25)*[A-Fa-f0-9]{2}){0,1}[a-zA-Z0-9]+([\-\.]{1}[a-zA-Z0-9]+)*\.%s`, escapedDomain))
 					tmpSubdomains := r.FindAllStringSubmatch(string(body), -1)
 					if err != nil {
 						fmt.Println("Error:", err)
@@ -181,15 +181,11 @@ func allAPIsUsage(d string, cfg *ini.File) (enumerated_subdomains []string) {
 
 					for _, value := range tmpSubdomains {
 						val := value[0]
-						deleteRe := regexp.MustCompile(`(?i)(%(25)*2F){0,1}`)
+						deleteRe := regexp.MustCompile(`(?i)(%(25)*[A-Fa-f0-9]{2})`)
 						val = deleteRe.ReplaceAllString(val, "")
 
 						if appendDomain {
 							val = val + "." + d
-						}
-
-						if strings.HasPrefix(val, "%2F") || strings.HasPrefix(val, "%2f") {
-							val = val[3:]
 						}
 
 						if re.MatchString(val) && !checkDuplicated(enumerated_subdomains, val) {

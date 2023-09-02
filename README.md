@@ -82,3 +82,8 @@ If you have any feature that you want to be added, please, open an issue or make
 - [ ] Support `engine.iterate` with variables like `start`, `end` and `max`, to make multiple requests changing a numeric parameter.
 - [X] Some domains are taken as url encoded "%252FX.Z.Y" due to double URL encoding in the results of the APIs, fix it some way, maybe upgrading the regex (?
 - [ ] Change parse in templates to engine.regex/gjson.expression/cookies.CookieName to use when supporting various reqs.
+- [ ] Iterate over a list of variables to make the same request with different parameters (Example: in github api, search for C, HTML, CSS, etc in just one template)
+- [ ] Possiblity to define step for range in templates instead of being always 1
+- [X] Upgrade the regex to take other URL encoded chars
+- [ ] Check if API domain resolves before make a HTTP request
+- [ ] Add verbose mode to see things like APIs not working, templates not loaded, etc
