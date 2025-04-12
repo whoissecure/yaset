@@ -2,10 +2,21 @@
 Yaset (Yet Another Subdomain Enumeration Tool) is a subdomain enumeration tool which main function is the passive enumeration. The APIs used as sources in the passive enumeration are added creating templates in YAML, making Yaset a tool that can grow easily.
 
 # Installation
-To install the tool and the templates, you have to compile the file `yaset.go`, move it to some directory in your path and then, clone the templates repository in your home directory. You can execute the following line:
-`git clone https://github.com/whoissecure/yaset && cd yaset && go build yaset.go && mkdir ~/.config/yaset && mv config.ini ~/.config/yaset/. && sudo mv yaset /usr/bin/. && cd && git clone https://github.com/whoissecure/yaset-templates`
+To install the tool, you can execute:
+```
+go install github.com/whoissecure/yaset-testing/cmd/yaset@latest
+```
 
-After that, you can delete the folder called "yaset" created where you executed the commands, and you can execute the tool from anywhere because it was moved to `/usr/bin/`, which should be in your path.
+In addition, you need to clone the templates' repository, where you can add you own sources:
+```
+git clone https://github.com/whoissecure/yaset-templates $HOME
+```
+
+To configure the API keys, create the directory `$HOME/.config/yaset` and save a configuration file:
+```
+mkdir $HOME/.config/yaset
+curl https://raw.githubusercontent.com/whoissecure/yaset/refs/heads/main/config.ini -o $HOME/.config/yaset/config.ini
+```
 
 # Modes
 To execute Yaset, you must choose one mode or both. The passive mode interacts with third party APIs to obtain subdomains, and the bruteforce mode uses a wordlist to check if the formed domain resolves to an IP.

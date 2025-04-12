@@ -1,4 +1,4 @@
-package main
+package yaset
 
 import (
 	"bufio"
@@ -124,7 +124,8 @@ func checkDuplicated(enumerated_subdomains []string, value string) (result bool)
 	return false
 }
 
-func allAPIsUsage(d string, cfg *ini.File) (enumerated_subdomains []string) {
+func allAPIsUsage(d string, cfg *ini.File) ([]string, error) {
+	enumerated_subdomains := []string{}
 	d = regexp.MustCompile(`^\*\.`).ReplaceAllString(strings.TrimSpace(d), "")
 	escapedDomain := regexp.QuoteMeta(d)
 	re := regexp.MustCompile(fmt.Sprintf(`\.%s$`, escapedDomain))
@@ -136,8 +137,7 @@ func allAPIsUsage(d string, cfg *ini.File) (enumerated_subdomains []string) {
 	templatesPath := filepath.Join(homeDir, "yaset-templates")
 	files, err := filepath.Glob(filepath.Join(templatesPath, "*.yaml"))
 	if err != nil {
-		fmt.Println(err)
-		return
+		return nil, fmt.Errorf("error loading templates: %w", err)
 	}
 
 	var wg sync.WaitGroup
@@ -199,7 +199,7 @@ func allAPIsUsage(d string, cfg *ini.File) (enumerated_subdomains []string) {
 	}
 
 	wg.Wait()
-	return enumerated_subdomains
+	return enumerated_subdomains, nil
 }
 
 func bruteforceResolution(file string, d string) (resolvedSubdomains []string) {
@@ -258,7 +258,7 @@ func resolveAllDomains(enumerated_subdomains []string) (resolvedSubdomains []str
 	return resolvedSubdomains
 }
 
-func main() {
+func Run() error {
 	var homeDir string
 	var err error
 
@@ -299,7 +299,7 @@ func main() {
 		files, err := filepath.Glob(filepath.Join(templatesPath, "*.yaml"))
 		if err != nil {
 			fmt.Println(err)
-			return
+			return nil
 		}
 
 		count := 0
@@ -356,7 +356,10 @@ func main() {
 
 	enumerated_subdomains := []string{}
 	if *p {
-		enumerated_subdomains = allAPIsUsage(*d, cfg)
+		enumerated_subdomains, err = allAPIsUsage(*d, cfg)
+		if err != nil {
+			return fmt.Errorf("error: %w", err)
+		}
 		if *resolve {
 			enumerated_subdomains = resolveAllDomains(enumerated_subdomains)
 		}
@@ -387,4 +390,5 @@ func main() {
 		}
 
 	}
+	return nil
 }
