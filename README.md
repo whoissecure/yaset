@@ -4,7 +4,7 @@ Yaset (Yet Another Subdomain Enumeration Tool) is a subdomain enumeration tool w
 # Installation
 To install the tool, you can execute:
 ```
-go install github.com/whoissecure/yaset-testing/cmd/yaset@latest
+go install github.com/whoissecure/yaset/cmd/yaset@latest
 ```
 
 In addition, you need to clone the templates' repository, where you can add you own sources:
